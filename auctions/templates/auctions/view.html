@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+
+{% block title%}
+    {{item.title}}
+{% endblock %}
+
+{% block body%}
+    
+    <table class="table ">
+        <tr>
+            <td class="" style="width: 30%;"><img src="{{item.image}}" alt="{{item.title}}" style="height: auto; width: 400px;border-radius: 25px;" ></td>
+            <td >
+                <div class="w-75">
+                    <h1 class="">{{item.title}}</h1>
+                    <p class="text-muted ">- {{item.description}}</p>
+
+                    <div>
+                        <h4 class="d-inline">Category : </h4>{{item.category}}
+                        <br><br>
+                        <h4 class="d-inline">Owner : </h4>{{item.owner}}
+                        <br><br>
+                        <h4 class="d-inline"> Current Highest Bidder : </h4>{{item.max_bidder}}
+                        <br><br>
+                        <h4 class="d-inline">Current Bid : </h4> <b>₹{{item.st_bid}} </b>
+                        <br><br>
+                    </div>
+                    {% ifnotequal user.username item.owner %}
+                    <form action="{% url 'view' item.id%}" method="post">
+                        {%csrf_token%}
+                        <input type="hidden" name="item" value="item">
+                        <input type="hidden" name="bidder" value="{{user.username}}">
+                        <p class="display-4"> Want to Bid ? {{user.username}}</p>
+                        <input type="number" name="amount" class="form-control" placeholder="Place bid of value greater than {{item.st_bid}}" id="">
+                        <br>
+                        {% if user.is_authenticated %}
+                        <input type="submit" value="Place Bid" class="btn btn-outline-primary">
+                        {% else %}
+                        <button class="btn btn-outline-primary"><a href="{% url 'login'%}" style="text-decoration: none;">Sign In</a></button>
+                        {% endif %}
+                        
+                    </form>
+                    {%else%}
+                    <button class="btn btn-outline-primary">Close Auctions</button>
+                    {%endifnotequal%}
+
+                </div>
+            </td>
+        </tr>
+    
+    </table>
+{% endblock %}
