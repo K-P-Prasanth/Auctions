@@ -1,8 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    <div class="table-responsive">
+
+<form action="{% url 'cat'%}" method="post">
+    {%csrf_token%}
+    <label for="dropdown">Catogries : </label>
+    <select class="form-control w-25 d-inline" id="dropdown" name="category">
+        {% for category in categories %}
+            <option value="{{category.id}}">{{category}}</option>
+        {% endfor %}
+        
+    </select>
+
+    <input type="submit" value="Search" class="btn btn-outline-success">
+</form>
+
+<div class="table-responsive">
     <table class="table align-middle">
         {% for item in items %}
     
@@ -44,4 +57,5 @@
         {% endfor %}
     </table>
 </div>
-{% endblock %}
+
+{%endblock%}

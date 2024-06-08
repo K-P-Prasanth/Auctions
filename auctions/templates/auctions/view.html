@@ -30,18 +30,31 @@
                         <input type="hidden" name="item" value="item">
                         <input type="hidden" name="bidder" value="{{user.username}}">
                         <p class="display-4"> Want to Bid ? {{user.username}}</p>
-                        <input type="number" name="amount" class="form-control" placeholder="Place bid of value greater than {{item.st_bid}}" id="">
+                        <input type="number" name="amount" class="form-control" placeholder="Place bid of value greater than {{item.st_bid}}" min="{{item.st_bid}}" max="" id="">
                         <br>
                         {% if user.is_authenticated %}
-                        <input type="submit" value="Place Bid" class="btn btn-outline-primary">
+                        <input type="submit" value="Place Bid" class="btn btn-outline-primary" >
                         {% else %}
-                        <button class="btn btn-outline-primary"><a href="{% url 'login'%}" style="text-decoration: none;">Sign In</a></button>
+                        <button class="btn btn-outline-danger"><a href="{% url 'login'%}" style="text-decoration: none;" class="text-danger">Sign In</a></button>
                         {% endif %}
                         
                     </form>
+                   
                     {%else%}
-                    <button class="btn btn-outline-primary">Close Auctions</button>
+                    <form action="{%url 'delete' %}" method="post">
+                        {%csrf_token%}
+                        <input type="hidden" name="item" value="{{item.id}}">
+                        <input type="submit" value="Close Auction" class="btn btn-outline-danger">
+                    </form>
                     {%endifnotequal%}
+
+                    <form action="{%url 'comment' %}" method="post">
+                        {%csrf_token%}
+                        <input type="hidden" name="item" value="{{item.id}}">
+                        <input type="hidden" name="commenter" value="{{user.id}}">
+                        <textarea name="com" id="" class="w-50" rows="10"></textarea>
+                        <input type="submit" value="comment" class="btn btn-outline-primary">
+                    </form>
 
                 </div>
             </td>

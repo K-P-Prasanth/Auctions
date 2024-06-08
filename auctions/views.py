@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User,Category,create_listing,Owner
+from .models import User,Category,create_listing,watchlist
 
 
 def index(request):
@@ -115,3 +115,57 @@ def view(request,item_id):
         return render(request,"auctions/view.html",{
             "item" : item
         })
+    
+def watch(request):
+    if request.method == "POST":
+        items = request.POST["item"]
+        item = create_listing.objects.get(pk=items)
+        usernames = request.POST["username"]
+        users = User.objects.get(pk=usernames)
+        f = watchlist.objects.create(user = users,listings = item)
+        f.save()
+        return render(request,"auctions/watch.html",{
+            "items" : watchlist.objects.all().filter(user=users)
+        })
+    
+    else:
+        return render(request,"auctions/watch.html",{
+            "items" : watchlist.objects.all().filter(user=request.user)
+        })
+    
+def deleteitem(request):
+    if request.method == "POST":
+        items = request.POST["delitem"]
+        item = watchlist.objects.get(pk=items)
+        item.delete()
+        return render(request,"auctions/watch.html",{
+            "items" : watchlist.objects.all().filter(user=request.user)
+        })
+    
+def delete(request):
+    if request.method == "POST":
+        items = request.POST["item"]
+        item = create_listing.objects.get(pk=items)
+        item.delete()
+        return render(request,"auctions/index.html",{
+            "items" : create_listing.objects.all()
+        })
+    
+
+def cat(request):
+    if request.method == "POST":
+        cato = request.POST["category"]
+        cat = Category.objects.get(pk=cato)
+        return render(request,"auctions/cat.html",{
+            "items":create_listing.objects.all().filter(category=cat),
+            "categories":Category.objects.all()
+        })
+    else:
+        categories = Category.objects.all()
+        return render(request,"auctions/cat.html",{
+            "categories":categories
+        })
+
+
+
+

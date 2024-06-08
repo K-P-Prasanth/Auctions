@@ -1,0 +1,46 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watch Listings</h2>
+    <div class="table-responsive">
+    <table class="table align-middle">
+        {% for item in items %}
+    
+        <tr>
+            <td class="" style="width: 30%;"><img src="{{item.listings.image}}" alt="{{item.listings.title}}" style="height: 240px; width: 300px;border-radius: 25px;" ></td>
+            <td>
+                <div class="w-75">
+                    <figure>
+                        <blockquote class="blockquote">
+                            <p><h4>Item : </h3>{{item.listings.title}}</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            {{item.listings.description}}
+                        </figcaption>
+                    </figure>
+                    <div>
+                        <p><h6 class="d-inline">Current Bid : </h6>{{item.listings.st_bid}} &#160 <h6 class="d-inline">Category : </h6>{{item.listings.category}}</p>
+                    </div>
+
+                    <div class="d-flex">
+                        <a href="{% url 'view' item.listings.id%}"><button type="button" class="btn btn-outline-primary">View</button></a>&#160;&#160;&#160;
+                        <form action="{% url 'deleteitem' %}" method="post">
+                            {%csrf_token%}
+                            <input type="hidden" name="delitem" value="{{item.id}}">
+                            <input type="submit" value="Delete" class="btn btn-outline-danger">
+                        </form>
+
+                    </div>
+                    
+
+                </div>
+            </td>
+        </tr>
+    
+        {% empty %}
+    
+        <h1>{{msg}}</h1>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

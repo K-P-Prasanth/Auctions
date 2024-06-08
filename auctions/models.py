@@ -3,12 +3,6 @@ from django.db import models
 
 
 class User(AbstractUser):
-    # first_name = models.CharField(max_length=64)
-    # last_name = models.CharField(max_length=64)
-    # name = models.CharField(max_length=64)
-    
-    # def __str__(self):
-    #     return f"{self.id} : {self.first_name}"
     def __str__(self):
         return f"{self.id} : {self.username}"
     
@@ -21,7 +15,7 @@ class create_listing(models.Model):
     image = models.URLField()
     category = models.ForeignKey(
         "Category",
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         related_name="auction_category",
     )
@@ -38,9 +32,17 @@ class Category(models.Model):
         return f"{self.name}"
     
 
-class Owner(models.Model):
-    item = models.ForeignKey(create_listing,on_delete=models.CASCADE, related_name="product")
-    own_by = models.ForeignKey(User,on_delete=models.CASCADE, related_name="name")
-    
+class watchlist(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_watching"
+    )
+    listings = models.ForeignKey(
+        create_listing,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="watched_item",
+    )
+
     def __str__(self):
-        return f"{self.id} : {self.item.title} : {self.own_by.first_name}"
+        return f"{self.listings.title} : {self.user.username}"
+    
