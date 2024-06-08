@@ -48,13 +48,6 @@
                     </form>
                     {%endifnotequal%}
 
-                    <form action="{%url 'comment' %}" method="post">
-                        {%csrf_token%}
-                        <input type="hidden" name="item" value="{{item.id}}">
-                        <input type="hidden" name="commenter" value="{{user.id}}">
-                        <textarea name="com" id="" class="w-50" rows="10"></textarea>
-                        <input type="submit" value="comment" class="btn btn-outline-primary">
-                    </form>
 
                 </div>
             </td>
